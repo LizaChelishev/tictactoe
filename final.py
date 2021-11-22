@@ -1,8 +1,8 @@
 def play_game():
     board = create_structure()
-    pretty = printPretty(board)
+    print_the_board = print_board(board)
     player_1, player_2 = symbols_and_players()
-    full = isFull(board, player_1, player_2)  # The function that starts the game is also in here.
+    full = board_full(board, player_1, player_2)
 
 
 def create_structure():
@@ -14,7 +14,7 @@ def create_structure():
     return board
 
 
-def printPretty(board):
+def print_board(board):
     # This function prints the board
     rows = len(board)
     cols = len(board)
@@ -34,27 +34,27 @@ def symbols_and_players():
     else:
         player_2 = "X"
         print("Player 2, you are X. ")
-
+    return [player_1, player_2]
 
 
 def choice_invalid(row, column):
     # This function tells the player that their selection is invalid
     print("Out of boarder. Pick another one. ")
+    return None
 
 
 def already_chosen(board, player_1, player_2, row, column):
     # This function tells the player that their selection was already chosen
     print("The square you picked is already filled. Pick another one.")
+    return None
 
 
 def start_the_game(board, player_1, player_2, moves):
-    # This function starts the game.
-
-    # Decides the turn
+    player = 0
     if moves % 2 == 0:
-        player = player_1
-    elif moves % 2 == 1:
         player = player_2
+    elif moves % 2 == 1:
+        player = player_1
     print("Player " + player + ", it is your turn. ")
     row = int(input("Pick a row:"
                     "[upper row: enter 0, middle row: enter 1, bottom row: enter 2]:"))
@@ -69,7 +69,7 @@ def start_the_game(board, player_1, player_2, moves):
         column = int(input("Pick a column:"
                            "[left column: enter 0, middle column: enter 1, right column enter 2]"))
 
-        # Check if the place you chose is already filled
+    # Check if the place you chose is already filled
     while (board[row][column] == player_1) or (board[row][column] == player_2):
         filled = already_chosen(board, player_1, player_2, row, column)
         row = int(input("Pick a row[upper row:"
@@ -77,40 +77,37 @@ def start_the_game(board, player_1, player_2, moves):
         column = int(input("Pick a column:"
                            "[left column: enter 0, middle column: enter 1, right column enter 2]"))
 
-        # Locates player's symbol on the board
+    # Locates player's symbol on the board
     if player == player_1:
         board[row][column] = player_1
 
     else:
         board[row][column] = player_2
 
-    return (board)
+    return board
 
 
-def isFull(board, player_1, player_2):
+def board_full(board, player_1, player_2):
     moves = 1
     winner = True
     # This function check if the board is full
     while moves < 10 and winner == True:
-        gaming = start_the_game(board, player_1, player_2, moves)
-        pretty = printPretty(board)
+        start_game = start_the_game(board, player_1, player_2, moves)
+        print_the_board = print_board(board)
 
         if moves == 9:
             print("The board is full. Game over.")
-            if winner == True:
-                print("Draw game. Start over. ")
+            if winner is True:
+                print("Draw game. Start over.")
 
-        # Check if here is a winner
-        winner = isWinner(board, player_1, player_2, moves)
+        winner = the_winner(board, player_1, player_2)
         moves += 1
-    if winner == False:
+    if winner is False:
         print("Game over.")
-
-    # This is function gives a report
-    report(moves, winner, player_2, player_1)
+    return None
 
 
-def isWinner(board, player_1, player_2, moves):
+def the_winner(board, player_1, player_2):
     # This function checks if any winner is winning
     winner = True
     # Check the rows
@@ -150,17 +147,5 @@ def isWinner(board, player_1, player_2, moves):
         print("Player " + player_2 + ", you won!")
 
     return winner
-
-
-def report(count, winner, symbol_1, symbol_2):
-    print("\n")
-    input("Press enter to see the game summary. ")
-    if (winner == False) and (count % 2 == 1):
-        print("Winner : Player " + symbol_1 + ".")
-    elif (winner == False) and (count % 2 == 0):
-        print("Winner : Player " + symbol_2 + ".")
-    else:
-        print("There is a tie. ")
-
 
 play_game()
